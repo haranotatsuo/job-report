@@ -1,0 +1,22 @@
+<!-- src/main/resources/templates/register.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ユーザー登録</title>
+</head>
+<body>
+    <h2>ユーザー登録</h2>
+    <form th:action="@{/register}" method="post" th:object="${user}">
+        <label>ユーザー名: <input type="text" th:field="*{username}" /></label><br/>
+        <label>パスワード: <input type="password" th:field="*{password}" /></label><br/>
+        <label>ロール:
+            <select th:field="*{role}">
+                <option value="ROLE_STAFF">STAFF</option>
+                <option value="ROLE_VIEWER">VIEWER</option>
+            </select>
+        </label><br/>
+        <button type="submit">登録</button>
+    </form>
+    <a th:href="@{/login}">ログインに戻る</a>
+</body>
+</html>
