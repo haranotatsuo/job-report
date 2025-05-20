@@ -3,6 +3,7 @@ package com.example.demo.dto;
 public class UserRegistrationDto {
 	private String username;
     private String password;
+    private String confirmPassword;
     private String role; // "ROLE_STAFF" or "ROLE_VIEWER"
 
     // Getter / Setter
@@ -20,6 +21,14 @@ public class UserRegistrationDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
     
     public String getRole() {

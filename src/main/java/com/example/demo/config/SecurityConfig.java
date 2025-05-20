@@ -24,13 +24,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests()
-                .requestMatchers("/login", "/css/**", "/js/**").permitAll()
-                .requestMatchers("/reports/**").hasAnyRole("STAFF", "VIEWER")
+            	.requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll()
+            	.requestMatchers("/reports", "/reports/list", "/reports/my").hasAnyRole("STAFF", "VIEWER")
+            	.requestMatchers("/reports/edit/**", "/reports/delete/**").hasRole("STAFF") // 編集削除はSTAFFのみ
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/home", true)  // ← 修正：一時的に安全なページへ
+                .defaultSuccessUrl("/reports", true)  // ← 修正：一時的に安全なページへ
                 .permitAll()
                 .and()
             .logout()

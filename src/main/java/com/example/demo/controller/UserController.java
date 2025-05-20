@@ -24,8 +24,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") UserRegistrationDto dto) {
-        userService.registerNewUser(dto);
-        return "redirect:/login?registered";
+    public String registerUser(@ModelAttribute("user") UserRegistrationDto dto, Model model) {
+        try {
+            userService.registerNewUser(dto);
+            return "redirect:/login?registered";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage()); // エラーメッセージを渡す
+            return "register"; // 登録ページに戻す
+        }
     }
 }
