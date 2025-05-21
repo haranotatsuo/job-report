@@ -23,7 +23,7 @@ public class EventServiceImpl implements EventService {
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
         dto.setStart(entity.getStart());
-        dto.setEndTime(entity.getEnd());
+        dto.setEnd(entity.getEnd());
         dto.setDescription(entity.getDescription());
         dto.setUserId(entity.getUserId());
         return dto;
@@ -34,7 +34,7 @@ public class EventServiceImpl implements EventService {
         e.setId(dto.getId());
         e.setTitle(dto.getTitle());
         e.setStart(dto.getStart());
-        e.setEnd(dto.getEndTime());
+        e.setEnd(dto.getEnd());
         e.setDescription(dto.getDescription());
         e.setUserId(dto.getUserId());
         return e;
@@ -53,7 +53,7 @@ public class EventServiceImpl implements EventService {
 
         existing.setTitle(dto.getTitle());
         existing.setStart(dto.getStart());
-        existing.setEnd(dto.getEndTime());
+        existing.setEnd(dto.getEnd());
         existing.setDescription(dto.getDescription());
         existing.setUserId(dto.getUserId()); // 念のため追加（必要に応じて）
         

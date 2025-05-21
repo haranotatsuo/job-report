@@ -6,7 +6,7 @@ public class EventDto {
     private Long id;
     private String title;
     private LocalDateTime start;
-    private LocalDateTime endTime;
+    private LocalDateTime end;
     private String description;
     private Long userId;
 
@@ -24,8 +24,8 @@ public class EventDto {
         return start;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public LocalDateTime getEnd() {
+        return end;
     }
 
     public String getDescription() {
@@ -50,8 +50,8 @@ public class EventDto {
         this.start = start;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
     }
 
     public void setDescription(String description) {

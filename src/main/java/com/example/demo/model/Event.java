@@ -19,7 +19,7 @@ public class Event {
     private LocalDateTime start;
 
     @Column(name = "end_time")  // DB上のカラム名を指定しておく（推奨）
-    private LocalDateTime endTime;
+    private LocalDateTime end;
 
     @Column(length = 1000)
     private String description;
@@ -42,7 +42,7 @@ public class Event {
     }
 
     public LocalDateTime getEnd() {
-        return endTime;
+        return end;
     }
 
     public String getDescription() {
@@ -66,8 +66,8 @@ public class Event {
         this.start = start;
     }
 
-    public void setEnd(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
     }
 
     public void setDescription(String description) {

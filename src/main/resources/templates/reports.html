@@ -84,6 +84,14 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.global.min.js"></script>
 <!-- カレンダー初期化スクリプト -->
 <script>
+	
+	function toDatetimeLocalStringJST(dateStrOrObj) {
+	  const date = typeof dateStrOrObj === 'string' ? new Date(dateStrOrObj) : dateStrOrObj;
+	  const offsetMin = date.getTimezoneOffset(); // -540（JST）
+	  const localDate = new Date(date.getTime() - offsetMin * 60 * 1000);
+	  return localDate.toISOString().slice(0, 16);
+	}
+	
   document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -95,17 +103,36 @@
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
       events: '/api/events',
+	  
+	  
       eventClick: function (info) {
         const event = info.event;
         document.getElementById('eventId').value = event.id;
         document.getElementById('title').value = event.title;
-        document.getElementById('start').value = event.start.toISOString().slice(0, 16);
-        document.getElementById('end').value = event.end ? event.end.toISOString().slice(0, 16) : '';
+        document.getElementById('start').value = toDatetimeLocalStringJST(event.start);
+        document.getElementById('end').value = event.end ? toDatetimeLocalStringJST(event.end) : '';
         document.getElementById('description').value = event.extendedProps.description || '';
+		
+		// 編集モード
+		document.getElementById('eventModalLabel').textContent = '予定を編集';
+		document.getElementById('deleteEventBtn').style.display = 'inline-block';
+		
         new bootstrap.Modal(document.getElementById('eventModal')).show();
       }
     });
     calendar.render();
+	
+	// 🔽 新規作成時：フォーム初期化
+	document.getElementById('addEventBtn').addEventListener('click', function () {
+	  document.getElementById('eventId').value = '';
+	  document.getElementById('title').value = '';
+	  document.getElementById('start').value = '';
+	  document.getElementById('end').value = '';
+	  document.getElementById('description').value = '';
+
+	  document.getElementById('eventModalLabel').textContent = '新規予定作成';
+	  document.getElementById('deleteEventBtn').style.display = 'none';
+	});
 
 	document.getElementById('saveEventBtn').addEventListener('click', function () {
 	  const eventId = document.getElementById('eventId').value;
