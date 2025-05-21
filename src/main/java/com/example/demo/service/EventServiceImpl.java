@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.EventDto;
 import com.example.demo.model.Event;
@@ -46,13 +48,18 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto updateEvent(Long id, EventDto dto) {
-        Event existing = eventRepository.findById(id).orElseThrow();
+        Event existing = eventRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "指定されたイベントが見つかりません: ID = " + id));
+
         existing.setTitle(dto.getTitle());
         existing.setStart(dto.getStart());
         existing.setEnd(dto.getEndTime());
         existing.setDescription(dto.getDescription());
+        existing.setUserId(dto.getUserId()); // 念のため追加（必要に応じて）
+        
         return toDto(eventRepository.save(existing));
     }
+
 
     @Override
     public List<EventDto> getAllEvents() {
