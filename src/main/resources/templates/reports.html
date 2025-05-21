@@ -18,12 +18,30 @@
 	  </style>
 </head>
 <body>
-	th:data-user-id="${currentUserId}" 
-	th:data-user-role="${currentUserRole}">
+	
+	<!-- ロールによる表示切り替え -->
+	  
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>ジョブ日報カレンダー</h2>
-        <button id="addEventBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">＋ 新規予定</button>
+		
+		<div class="text-end text-muted mb-2 me-3">
+		    <span th:if="${currentUserRole == 'ROLE_STAFF'}">スタッフ専用ページ</span>
+		    <span th:if="${currentUserRole == 'ROLE_VIEWER'}">ビュアー専用ページ</span>
+		</div>
+		
+		<div class="d-flex align-items-center">
+		    <button id="addEventBtn"
+		            class="btn btn-primary me-2"
+		            data-bs-toggle="modal"
+		            data-bs-target="#eventModal"
+		            th:if="${currentUserRole == 'ROLE_STAFF'}">
+		        ＋ 新規予定
+		    </button>
+		    <form th:action="@{/logout}" method="post" class="mb-0">
+		        <button type="submit" class="btn btn-outline-secondary">ログアウト</button>
+		    </form>
+		</div>
     </div>
 
     <div id='calendar'></div>
