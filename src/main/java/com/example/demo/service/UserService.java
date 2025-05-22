@@ -1,6 +1,7 @@
 // com.example.demo.service.UserService.java
 package com.example.demo.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,10 @@ public class UserService {
     public User findByUsername(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         return optionalUser.orElse(null);
+    }
+    
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }
 

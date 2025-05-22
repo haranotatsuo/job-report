@@ -8,4 +8,5 @@ import com.example.demo.model.Event;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findByUserId(Long userId);
+    List<Event> findByTargetUserId(Long targetUserId);
 }

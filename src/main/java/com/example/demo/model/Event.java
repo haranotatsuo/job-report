@@ -26,6 +26,9 @@ public class Event {
 
     @Column(name = "user_id")
     private Long userId;
+    
+    @Column(name = "target_user_id")
+    private Long targetUserId;
 
     // getter・setter 省略（必要ならLombok使えます）
  // ===== Getter =====
@@ -52,6 +55,10 @@ public class Event {
     public Long getUserId() {
         return userId;
     }
+    
+    public Long getTargetUserId() {
+        return targetUserId;
+    }
 
     // ===== Setter =====
     public void setId(Long id) {
@@ -76,5 +83,9 @@ public class Event {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+    
+    public void setTargetUserId(Long targetUserId) {
+        this.targetUserId = targetUserId;
     }
 }

@@ -9,6 +9,7 @@ public class EventDto {
     private LocalDateTime end;
     private String description;
     private Long userId;
+    private Long targetUserId;
 
  // ======= Getter =======
 
@@ -35,6 +36,10 @@ public class EventDto {
     public Long getUserId() {
         return userId;
     }
+    
+    public Long getTargetUserId() {
+        return targetUserId;
+    }
 
     // ======= Setter =======
 
@@ -60,5 +65,9 @@ public class EventDto {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+    
+    public void setTargetUserId(Long targetUserId) {
+        this.targetUserId = targetUserId;
     }
 }

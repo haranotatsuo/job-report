@@ -27,6 +27,7 @@ public class EventServiceImpl implements EventService {
         dto.setEnd(entity.getEnd());
         dto.setDescription(entity.getDescription());
         dto.setUserId(entity.getUserId()); // 表示用には必要
+        dto.setTargetUserId(entity.getTargetUserId());
         return dto;
     }
 
@@ -38,13 +39,21 @@ public class EventServiceImpl implements EventService {
         e.setEnd(dto.getEnd());
         e.setDescription(dto.getDescription());
         e.setUserId(dto.getUserId());
+        e.setTargetUserId(dto.getTargetUserId());
         return e;
     }
+    
 
     @Override
     public EventDto createEventForUser(EventDto dto, User user) {
         Event entity = toEntity(dto);
+     // 作成者をログインユーザーに固定（不正操作防止）
         entity.setUserId(user.getId()); // 安全な方法で設定
+     // targetUserId が null の場合は、自分自身を対象とする
+        if (entity.getTargetUserId() == null) {
+            entity.setTargetUserId(user.getId());
+        }
+        
         Event saved = eventRepository.save(entity);
         return toDto(saved);
     }
@@ -65,7 +74,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventDto> getEventsByUserId(Long userId) {
-        return eventRepository.findByUserId(userId)
+        return eventRepository.findByTargetUserId(userId)
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());

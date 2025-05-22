@@ -59,16 +59,26 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="eventModalLabel">仕事内容追加／編集</h5>
+        <h5 class="modal-title" id="eventModalLabel">日報の編集</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form id="eventForm">
           <input type="hidden" id="eventId">
           <div class="mb-3">
-            <label for="title" class="form-label">タイトル</label>
+            <label for="title" class="form-label">仕事内容</label>
             <input type="text" class="form-control" id="title" required>
           </div>
+		  <div class="mb-3" th:if="${currentUserRole == 'ROLE_STAFF'}">
+		    <label for="userSelect" class="form-label">ユーザー選択</label>
+		    <select id="userSelect" class="form-select">
+		      <option value="">-- ユーザーを選択 --</option>
+		      <option th:each="user : ${userList}"
+		              th:value="${user.id}"
+		              th:text="${user.username}">
+		      </option>
+		    </select>
+		  </div>
           <div class="mb-3">
             <label for="start" class="form-label">開始日時</label>
             <input type="datetime-local" class="form-control" id="start" required>
@@ -142,8 +152,12 @@
         document.getElementById('end').value = event.end ? toDatetimeLocalStringJST(event.end) : '';
         document.getElementById('description').value = event.extendedProps.description || '';
 		
+		const userSelectEl = document.getElementById('userSelect');
+		if (userSelectEl) {
+		  userSelectEl.value = event.extendedProps.userId;
+		}
 		// 編集モード
-		document.getElementById('eventModalLabel').textContent = '予定を編集';
+		document.getElementById('eventModalLabel').textContent = '仕事内容の編集';
 		document.getElementById('deleteEventBtn').style.display = 'inline-block';
 		
         new bootstrap.Modal(document.getElementById('eventModal')).show();
@@ -159,7 +173,7 @@
 	  document.getElementById('end').value = '';
 	  document.getElementById('description').value = '';
 
-	  document.getElementById('eventModalLabel').textContent = '新規予定作成';
+	  document.getElementById('eventModalLabel').textContent = '仕事内容の登録';
 	  document.getElementById('deleteEventBtn').style.display = 'none';
 	});
 
@@ -170,6 +184,7 @@
 	  const end = document.getElementById('end').value;
 	  const description = document.getElementById('description').value;
 	  const userId = document.body.dataset.userId;
+	  const selectedUserId = document.getElementById('userSelect')?.value || currentUserId;
 
 	  const eventData = {
 	    id: eventId ? Number(eventId) : null,
@@ -177,7 +192,7 @@
 	    start,
 	    end,
 	    description,
-	    userId
+	    userId: selectedUserId
 	  };
 
 	  const method = eventId ? 'PUT' : 'POST';

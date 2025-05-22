@@ -29,6 +29,9 @@ public class ReportsController {
             model.addAttribute("reports", reportService.findByUser(user));
         } else if (user.getRole().equals("ROLE_STAFF")) {
             model.addAttribute("reports", reportService.findAll());
+            
+         // スタッフにはユーザー一覧を表示用に渡す
+            model.addAttribute("userList", userService.findAll());
         }
 
         // ログイン中のユーザー情報もJSに渡す用に追加
