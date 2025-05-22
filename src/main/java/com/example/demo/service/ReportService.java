@@ -8,4 +8,5 @@ import com.example.demo.model.User;
 public interface ReportService {
     List<Report> findByUser(User user);
     List<Report> findAll();
+    List<Report> findByTargetUser(User user); // ← これを追加
 }

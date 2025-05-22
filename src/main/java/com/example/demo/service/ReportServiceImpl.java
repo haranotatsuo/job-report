@@ -31,6 +31,16 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    public List<Report> findByTargetUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("ターゲットユーザー情報が null です");
+        }
+
+        logger.debug("ターゲットユーザーID {} のレポート一覧を取得", user.getId());
+        return reportRepository.findByTargetUser(user);
+    }
+
+    @Override
     public List<Report> findAll() {
         logger.debug("全てのレポートを取得");
         return reportRepository.findAll();

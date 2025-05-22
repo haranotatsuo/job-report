@@ -25,7 +25,7 @@ public class ReportsController {
     public String viewReports(Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
-        if (user.getRole().equals("ROLE_VIEWER")) {
+        if (user.getRole().equals("ROLE_USER")) {
             model.addAttribute("reports", reportService.findByUser(user));
         } else if (user.getRole().equals("ROLE_STAFF")) {
             model.addAttribute("reports", reportService.findAll());

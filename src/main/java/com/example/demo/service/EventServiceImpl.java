@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.EventDto;
 import com.example.demo.model.Event;
+import com.example.demo.model.User;
 import com.example.demo.repository.EventRepository;
 
 @Service
@@ -25,7 +26,7 @@ public class EventServiceImpl implements EventService {
         dto.setStart(entity.getStart());
         dto.setEnd(entity.getEnd());
         dto.setDescription(entity.getDescription());
-        dto.setUserId(entity.getUserId());
+        dto.setUserId(entity.getUserId()); // 表示用には必要
         return dto;
     }
 
@@ -41,8 +42,10 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDto createEvent(EventDto dto) {
-        Event saved = eventRepository.save(toEntity(dto));
+    public EventDto createEventForUser(EventDto dto, User user) {
+        Event entity = toEntity(dto);
+        entity.setUserId(user.getId()); // 安全な方法で設定
+        Event saved = eventRepository.save(entity);
         return toDto(saved);
     }
 
@@ -55,15 +58,17 @@ public class EventServiceImpl implements EventService {
         existing.setStart(dto.getStart());
         existing.setEnd(dto.getEnd());
         existing.setDescription(dto.getDescription());
-        existing.setUserId(dto.getUserId()); // 念のため追加（必要に応じて）
-        
+        // userId の更新は不要・禁止（セキュリティ的に）
+
         return toDto(eventRepository.save(existing));
     }
 
-
     @Override
-    public List<EventDto> getAllEvents() {
-        return eventRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
+    public List<EventDto> getEventsByUserId(Long userId) {
+        return eventRepository.findByUserId(userId)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override

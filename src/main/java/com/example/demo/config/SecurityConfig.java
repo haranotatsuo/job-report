@@ -29,9 +29,9 @@ public class SecurityConfig {
             .authorizeHttpRequests()
                 .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()  // ← 追加①: H2コンソールへの許可
-                .requestMatchers("/reports", "/reports/list", "/reports/my").hasAnyRole("STAFF", "VIEWER")
+                .requestMatchers("/reports", "/reports/list", "/reports/my").hasAnyRole("STAFF", "USER")
                 .requestMatchers("/reports/edit/**", "/reports/delete/**").hasRole("STAFF")
-                .requestMatchers("/api/events/**").hasAnyRole("STAFF", "VIEWER")  // GETはVIEWERも可
+                .requestMatchers("/api/events/**").hasAnyRole("STAFF", "USER")  // USER（旧VIEWER）も可
                 .requestMatchers(HttpMethod.POST, "/api/events/**").hasRole("STAFF")  // 登録はSTAFFのみ
                 .requestMatchers(HttpMethod.PUT, "/api/events/**").hasRole("STAFF")   // 編集も
                 .requestMatchers(HttpMethod.DELETE, "/api/events/**").hasRole("STAFF") // 削除も

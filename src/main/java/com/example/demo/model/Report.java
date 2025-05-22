@@ -20,46 +20,28 @@ public class Report {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;                 // 投稿したユーザー
+    private User user;                 // 作成者（スタッフ）
 
+    @ManyToOne
+    @JoinColumn(name = "target_user_id") // 追加：誰宛か（閲覧対象）
+    private User targetUser;
+    
     // --- Getter & Setter ---
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public LocalDate getReportDate() { return reportDate; }
+    public void setReportDate(LocalDate reportDate) { this.reportDate = reportDate; }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public LocalDate getReportDate() {
-        return reportDate;
-    }
-
-    public void setReportDate(LocalDate reportDate) {
-        this.reportDate = reportDate;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    
+    public User getTargetUser() { return targetUser; }
+    public void setTargetUser(User targetUser) { this.targetUser = targetUser; }
 }
