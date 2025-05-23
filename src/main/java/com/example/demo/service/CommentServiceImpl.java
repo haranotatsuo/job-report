@@ -61,7 +61,17 @@ public class CommentServiceImpl implements CommentService {
         comment.setUser(user);
         comment.setEvent(event);
 
-        return toDto(commentRepository.save(comment));
+        Comment saved = commentRepository.save(comment);
+        
+     // DTOに変換して返却
+        CommentDto result = new CommentDto();
+        result.setId(saved.getId());
+        result.setContent(saved.getContent());
+        result.setCreatedAt(saved.getCreatedAt());
+        result.setUserId(user.getId());
+        result.setUsername(user.getUsername());
+        result.setEventId(event.getId());
+        return result;
     }
 
     @Override

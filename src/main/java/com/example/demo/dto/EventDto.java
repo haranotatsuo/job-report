@@ -2,13 +2,19 @@ package com.example.demo.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class EventDto {
     private Long id;
     private String title;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    
     private LocalDateTime start;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    
     private LocalDateTime end;
     private String description;
-    private Long userId;
+    
     private Long targetUserId;
 
  // ======= Getter =======
@@ -33,9 +39,6 @@ public class EventDto {
         return description;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
     
     public Long getTargetUserId() {
         return targetUserId;
@@ -63,9 +66,6 @@ public class EventDto {
         this.description = description;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
     
     public void setTargetUserId(Long targetUserId) {
         this.targetUserId = targetUserId;

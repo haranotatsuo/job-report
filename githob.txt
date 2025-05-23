@@ -1,1 +1,0 @@
-cd "C:\Users\1Java30\Desktop\サーブレット&JSP\job-report"

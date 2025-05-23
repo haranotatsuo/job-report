@@ -2,22 +2,25 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import com.example.demo.dto.EventDto;
 import com.example.demo.model.User;
 
 public interface EventService {
 
-    @PreAuthorize("hasRole('STAFF')")
+	// 利用者・スタッフ共に使用可能（表示）
+    List<EventDto> getEventsByTargetUserId(Long userId);
+
+    // スタッフのみ → 全イベント取得（管理者ビュー用）
+    List<EventDto> getAllEvents();
+
+    // スタッフのみ → イベント登録
     EventDto createEventForUser(EventDto dto, User user);
 
-    @PreAuthorize("hasRole('STAFF')")
-    EventDto updateEvent(Long id, EventDto dto);
+    // スタッフのみ → イベント更新
+    EventDto updateEvent(Long id, EventDto dto, User currentUser);
 
-    @PreAuthorize("hasAnyRole('STAFF', 'USER')")
-    List<EventDto> getEventsByUserId(Long userId);
-
-    @PreAuthorize("hasRole('STAFF')")
+    // スタッフのみ → イベント削除
     void deleteEvent(Long id);
+    
+    
 }

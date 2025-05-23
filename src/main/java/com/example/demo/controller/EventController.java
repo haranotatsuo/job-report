@@ -35,7 +35,14 @@ public class EventController {
         String username = userDetails.getUsername();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません: " + username));
-        return eventService.getEventsByUserId(user.getId());
+        
+        if ("ROLE_STAFF".equals(user.getRole())) {
+            // スタッフ → 全イベントを取得
+            return eventService.getAllEvents();
+        } else {
+            // 利用者 → 自分が対象のイベントのみ取得
+            return eventService.getEventsByTargetUserId(user.getId());
+        }
     }
 
     // ✅ ログインユーザーでイベント登録
@@ -49,9 +56,15 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public EventDto updateEvent(@PathVariable Long id, @RequestBody EventDto dto) {
-        return eventService.updateEvent(id, dto);
+    public EventDto updateEvent(@PathVariable Long id,
+                                @RequestBody EventDto dto,
+                                @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません: " + username));
+        return eventService.updateEvent(id, dto, user);
     }
+
 
     @DeleteMapping("/{id}")
     public void deleteEvent(@PathVariable Long id) {

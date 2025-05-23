@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +35,7 @@ public class CommentController {
     // コメント追加（ログインユーザー情報付き）
     @PostMapping
     public CommentDto addComment(
-            @RequestBody CommentDto dto,
+    		@Valid @RequestBody CommentDto dto,
             @AuthenticationPrincipal UserDetails userDetails) {
         return commentService.createComment(dto, userDetails.getUsername());
     }
@@ -42,7 +44,7 @@ public class CommentController {
     @PutMapping("/{id}")
     public CommentDto updateComment(
             @PathVariable Long id,
-            @RequestBody CommentDto dto,
+            @Valid @RequestBody CommentDto dto,
             @AuthenticationPrincipal UserDetails userDetails) {
         return commentService.updateComment(id, dto, userDetails.getUsername());
     }

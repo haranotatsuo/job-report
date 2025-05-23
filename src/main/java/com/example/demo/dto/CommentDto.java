@@ -2,8 +2,12 @@ package com.example.demo.dto;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class CommentDto {
     private Long id;
+    
+    @NotBlank(message = "コメント内容を入力してください")
     private String content;
     private LocalDateTime createdAt;
     private Long eventId;

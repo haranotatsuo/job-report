@@ -74,6 +74,7 @@
 		    <select id="userSelect" class="form-select">
 		      <option value="">-- ユーザーを選択 --</option>
 		      <option th:each="user : ${userList}"
+			  		  th:if="${user.role != 'ROLE_STAFF'}"
 		              th:value="${user.id}"
 		              th:text="${user.username}">
 		      </option>
@@ -178,55 +179,57 @@
 	});
 
 	document.getElementById('saveEventBtn').addEventListener('click', function () {
-	  const eventId = document.getElementById('eventId').value;
+	  const eventIdRaw = document.getElementById('eventId').value;
+	  const eventId = eventIdRaw !== '' ? Number(eventIdRaw) : null;
 	  const title = document.getElementById('title').value;
 	  const start = document.getElementById('start').value;
 	  const end = document.getElementById('end').value;
 	  const description = document.getElementById('description').value;
 	  const userId = document.body.dataset.userId;
 	  const selectedUserId = document.getElementById('userSelect')?.value || currentUserId;
-
+	  
+	  // 🔽 ユーザー選択バリデーション（STAFFのみ）
+	  if (currentUserRole === 'ROLE_STAFF' && (!selectedUserId || selectedUserId === '')) {
+	    alert("ユーザーを選択してください。");
+	    return;
+	  }
+	  
+	  if (end && start > end) {
+	  	 alert("終了日時は開始日時より後に設定してください。");
+	  	 return;
+	  }
+	  
 	  const eventData = {
-	    id: eventId ? Number(eventId) : null,
+	    id: eventId,
 	    title,
 	    start,
 	    end,
 	    description,
-	    userId: selectedUserId
+	    targetUserId: selectedUserId
 	  };
 
 	  const method = eventId ? 'PUT' : 'POST';
-	  const url = eventId ? `/api/events/${eventId}` : '/api/events';
+	  const url = '/api/events' + (eventId ? `/${eventId}` : '');
 
-	  // CSRFトークン取得
-	  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-	  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-	  
-	  if (end && start > end) {
-	    alert("終了日時は開始日時より後に設定してください。");
-	    return;
-	  }
-	  
 	  fetch(url, {
 	    method: method,
 	    headers: {
 	      'Content-Type': 'application/json',
-	      [csrfHeader]: csrfToken  // ← ここが重要！！
+	      'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
 	    },
 	    body: JSON.stringify(eventData)
 	  })
-	    .then(response => {
-	      if (!response.ok) throw new Error('サーバーエラー');
-	      return response.json();
-	    })
-	    .then(data => {
-	      const modal = bootstrap.Modal.getInstance(document.getElementById('eventModal'));
-	      modal.hide();
-	      calendar.refetchEvents(); // カレンダー更新
-	    })
-	    .catch(error => {
-	      alert('保存に失敗しました: ' + error.message);
-	    });
+	  .then(response => {
+	    if (!response.ok) throw new Error('保存に失敗しました');
+	    return response.json();
+	  })
+	  .then(() => {
+	    bootstrap.Modal.getInstance(document.getElementById('eventModal')).hide();
+	    calendar.refetchEvents();
+	  })
+	  .catch(error => {
+	    alert("エラーが発生しました: " + error.message);
+	  });
 	});
 
 
