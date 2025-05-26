@@ -13,6 +13,7 @@ public class CommentDto {
     private Long eventId;
     private Long userId;
     private String username;
+    private Long parentId;
 
     // ===== Getter =====
 
@@ -39,6 +40,10 @@ public class CommentDto {
     public String getUsername() {
         return username;
     }
+    
+    public Long getParentId() {
+        return parentId;
+    }
 
     // ===== Setter =====
 
@@ -64,5 +69,9 @@ public class CommentDto {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+    
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 }

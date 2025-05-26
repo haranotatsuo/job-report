@@ -37,6 +37,11 @@ public class CommentServiceImpl implements CommentService {
         dto.setEventId(comment.getEvent().getId());
         dto.setUserId(comment.getUser().getId());
         dto.setUsername(comment.getUser().getUsername());
+        
+        if (comment.getParentComment() != null) {
+            dto.setParentId(comment.getParentComment().getId());
+        }
+        
         return dto;
     }
 
@@ -60,6 +65,11 @@ public class CommentServiceImpl implements CommentService {
         comment.setCreatedAt(LocalDateTime.now());
         comment.setUser(user);
         comment.setEvent(event);
+        
+        if (dto.getParentId() != null) {
+            Comment parent = commentRepository.findById(dto.getParentId()).orElse(null);
+            comment.setParentComment(parent);
+        }
 
         Comment saved = commentRepository.save(comment);
         
@@ -71,6 +81,7 @@ public class CommentServiceImpl implements CommentService {
         result.setUserId(user.getId());
         result.setUsername(user.getUsername());
         result.setEventId(event.getId());
+        result.setParentId(dto.getParentId());
         return result;
     }
 
@@ -86,6 +97,8 @@ public class CommentServiceImpl implements CommentService {
         comment.setContent(dto.getContent());
         return toDto(commentRepository.save(comment));
     }
+    
+    
 
     @Override
     public void deleteComment(Long id, String username) {

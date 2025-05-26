@@ -71,14 +71,16 @@
           </div>
 		  <div class="mb-3" th:if="${currentUserRole == 'ROLE_STAFF'}">
 		    <label for="userSelect" class="form-label">ユーザー選択</label>
-		    <select id="userSelect" class="form-select">
-		      <option value="">-- ユーザーを選択 --</option>
-		      <option th:each="user : ${userList}"
-			  		  th:if="${user.role != 'ROLE_STAFF'}"
-		              th:value="${user.id}"
-		              th:text="${user.username}">
-		      </option>
-		    </select>
+			<select id="userSelect" class="form-select">
+			  <option value="">-- ユーザーを選択 --</option>
+			  <th:block th:each="user : ${userList}">
+			    <option th:if="${user.role != 'ROLE_STAFF'}"
+			            th:value="${user.id}"
+			            th:text="${user.username}">
+			    </option>
+			  </th:block>
+			</select>
+
 		  </div>
           <div class="mb-3">
             <label for="start" class="form-label">開始日時</label>
@@ -103,15 +105,6 @@
   </div>
 </div>
 <script>
-        // JavaScript でログイン中のユーザー情報を取得
-        const currentUserId = document.body.dataset.userId;
-        const currentUserRole = document.body.dataset.userRole;
-
-        console.log("現在のユーザーID:", currentUserId);
-        console.log("現在のロール:", currentUserRole);
-		
-		
-		
         // FullCalendar イベントレンダリング時にこれを使って編集・削除ボタンの表示を制御
 </script>
 <!-- Bootstrap JS -->
@@ -120,171 +113,7 @@
 <!-- FullCalendar v6 用の正しいCDN構成 -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.global.min.js"></script>
-<!-- カレンダー初期化スクリプト -->
-<script>
-	
-	function toDatetimeLocalStringJST(dateStrOrObj) {
-	  const date = typeof dateStrOrObj === 'string' ? new Date(dateStrOrObj) : dateStrOrObj;
-	  const offsetMin = date.getTimezoneOffset(); // -540（JST）
-	  const localDate = new Date(date.getTime() - offsetMin * 60 * 1000);
-	  return localDate.toISOString().slice(0, 16);
-	}
-	
-  document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('calendar');
-	const currentUserId = document.body.dataset.userId;
-	
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: window.innerWidth < 768 ? 'listWeek' : 'dayGridMonth',
-      locale: 'ja',
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-      },
-      events: `/api/events?userId=${currentUserId}`,
-	  
-	  
-      eventClick: function (info) {
-        const event = info.event;
-        document.getElementById('eventId').value = event.id;
-        document.getElementById('title').value = event.title;
-        document.getElementById('start').value = toDatetimeLocalStringJST(event.start);
-        document.getElementById('end').value = event.end ? toDatetimeLocalStringJST(event.end) : '';
-        document.getElementById('description').value = event.extendedProps.description || '';
-		
-		// ← 追加：中身を確認
-		const targetUserId = event.extendedProps.targetUserId;
-		console.log('event.extendedProps.targetUserId:', targetUserId);
-		
-		const userSelectEl = document.getElementById('userSelect');
-		if (userSelectEl) {
-			
-			// ← 追加：optionのvalue一覧を出力して一致しているか確認
-	      const options = Array.from(userSelectEl.options).map(opt => opt.value);
-	      console.log('selectのoption value一覧:', options);
-		  
-		  userSelectEl.value = event.extendedProps.userId;
-		  userSelectEl.value = targetUserId != null ? String(targetUserId) : '';
-		  // ← 追加：セットされたか確認
-		  console.log('セット後のselected value:', userSelectEl.value);
-		}
-		// 編集モード
-		document.getElementById('eventModalLabel').textContent = '仕事内容の編集';
-		document.getElementById('deleteEventBtn').style.display = 'inline-block';
-		
-        new bootstrap.Modal(document.getElementById('eventModal')).show();
-      }
-    });
-    calendar.render();
-	
-	// 🔽 新規作成時：フォーム初期化
-	document.getElementById('addEventBtn').addEventListener('click', function () {
-	  document.getElementById('eventId').value = '';
-	  document.getElementById('title').value = '';
-	  
-	  document.getElementById('start').value = '';
-	  document.getElementById('end').value = '';
-	  document.getElementById('description').value = '';
 
-	  document.getElementById('eventModalLabel').textContent = '仕事内容の登録';
-	  document.getElementById('deleteEventBtn').style.display = 'none';
-	  document.getElementById('userSelect').selectedIndex = 0;
-	});
-
-	document.getElementById('saveEventBtn').addEventListener('click', function () {
-	  const eventIdRaw = document.getElementById('eventId').value;
-	  const eventId = eventIdRaw !== '' ? Number(eventIdRaw) : null;
-	  const title = document.getElementById('title').value;
-	  const start = document.getElementById('start').value;
-	  const end = document.getElementById('end').value;
-	  const description = document.getElementById('description').value;
-	  const userId = document.body.dataset.userId;
-	  const selectedUserId = document.getElementById('userSelect')?.value || currentUserId;
-	  
-	  // 🔽 ユーザー選択バリデーション（STAFFのみ）
-	  if (currentUserRole === 'ROLE_STAFF' && (!selectedUserId || selectedUserId === '')) {
-	    alert("ユーザーを選択してください。");
-	    return;
-	  }
-	  
-	  if (end && start > end) {
-	  	 alert("終了日時は開始日時より後に設定してください。");
-	  	 return;
-	  }
-	  
-	  const eventData = {
-	    id: eventId,
-	    title,
-	    start,
-	    end,
-	    description,
-	    targetUserId: selectedUserId
-	  };
-
-	  const method = eventId ? 'PUT' : 'POST';
-	  const url = '/api/events' + (eventId ? `/${eventId}` : '');
-
-	  fetch(url, {
-	    method: method,
-	    headers: {
-	      'Content-Type': 'application/json',
-	      'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
-	    },
-	    body: JSON.stringify(eventData)
-	  })
-	  .then(response => {
-	    if (!response.ok) throw new Error('保存に失敗しました');
-	    return response.json();
-	  })
-	  .then(() => {
-	    bootstrap.Modal.getInstance(document.getElementById('eventModal')).hide();
-	    calendar.refetchEvents();
-	  })
-	  .catch(error => {
-	    alert("エラーが発生しました: " + error.message);
-	  });
-	});
-
-
-
-	document.getElementById('deleteEventBtn').addEventListener('click', function () {
-	  const eventId = document.getElementById('eventId').value;
-
-	  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-	  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-	  if (!eventId) {
-	    alert("削除するイベントが選択されていません。");
-	    return;
-	  }
-
-	  if (!confirm("この予定を削除しますか？")) {
-	    return;
-	  }
-
-	  fetch(`/api/events/${eventId}`, {
-	    method: 'DELETE',
-	    headers: {
-	      'Content-Type': 'application/json',
-		  [csrfHeader]: csrfToken  // CSRF トークンを追加
-	    }
-	  })
-	    .then(response => {
-	      if (!response.ok) throw new Error('サーバーエラー');
-	      return response.text();
-	    })
-	    .then(() => {
-	      const modal = bootstrap.Modal.getInstance(document.getElementById('eventModal'));
-	      modal.hide();
-	      calendar.refetchEvents(); // カレンダーを更新
-	    })
-	    .catch(error => {
-	      alert('削除に失敗しました: ' + error.message);
-	    });
-	});
-
-  });
-</script>
+<script src="/js/reports.js"></script>
 </body>
 </html>

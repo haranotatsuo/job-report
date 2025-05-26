@@ -3,14 +3,20 @@ package com.example.demo.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Comment {
 
     @Id
@@ -19,6 +25,8 @@ public class Comment {
 
     private String content;
 
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne
@@ -28,6 +36,10 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Comment parentComment;
 
     // getter/setter
     public Long getId() { return id; }
@@ -52,6 +64,10 @@ public class Comment {
     public Event getEvent() {
         return event;
     }
+    
+    public Comment getParentComment() {
+        return parentComment;
+    }
 
     public void setEvent(Event event) {
         this.event = event;
@@ -63,6 +79,10 @@ public class Comment {
 
     public void setUser(User user) {
         this.user = user;
+    }
+    
+    public void setParentComment(Comment parentComment) {
+        this.parentComment = parentComment;
     }
 
 }
