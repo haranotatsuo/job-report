@@ -153,9 +153,21 @@
         document.getElementById('end').value = event.end ? toDatetimeLocalStringJST(event.end) : '';
         document.getElementById('description').value = event.extendedProps.description || '';
 		
+		// ← 追加：中身を確認
+		const targetUserId = event.extendedProps.targetUserId;
+		console.log('event.extendedProps.targetUserId:', targetUserId);
+		
 		const userSelectEl = document.getElementById('userSelect');
 		if (userSelectEl) {
+			
+			// ← 追加：optionのvalue一覧を出力して一致しているか確認
+	      const options = Array.from(userSelectEl.options).map(opt => opt.value);
+	      console.log('selectのoption value一覧:', options);
+		  
 		  userSelectEl.value = event.extendedProps.userId;
+		  userSelectEl.value = targetUserId != null ? String(targetUserId) : '';
+		  // ← 追加：セットされたか確認
+		  console.log('セット後のselected value:', userSelectEl.value);
 		}
 		// 編集モード
 		document.getElementById('eventModalLabel').textContent = '仕事内容の編集';
@@ -170,12 +182,14 @@
 	document.getElementById('addEventBtn').addEventListener('click', function () {
 	  document.getElementById('eventId').value = '';
 	  document.getElementById('title').value = '';
+	  
 	  document.getElementById('start').value = '';
 	  document.getElementById('end').value = '';
 	  document.getElementById('description').value = '';
 
 	  document.getElementById('eventModalLabel').textContent = '仕事内容の登録';
 	  document.getElementById('deleteEventBtn').style.display = 'none';
+	  document.getElementById('userSelect').selectedIndex = 0;
 	});
 
 	document.getElementById('saveEventBtn').addEventListener('click', function () {
