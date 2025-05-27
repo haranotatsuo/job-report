@@ -7,13 +7,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class EventDto {
     private Long id;
     private String title;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime start;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime end;
+    
     private String description;
+    
+    private String username;
     
     private Long targetUserId;
 
@@ -39,6 +42,10 @@ public class EventDto {
         return description;
     }
 
+    public String getUsername() {
+        return username;
+    }
+    
     
     public Long getTargetUserId() {
         return targetUserId;
@@ -62,6 +69,10 @@ public class EventDto {
         this.end = end;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
     public void setDescription(String description) {
         this.description = description;
     }

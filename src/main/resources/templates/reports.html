@@ -94,6 +94,12 @@
             <label for="description" class="form-label">コメント</label>
             <textarea class="form-control" id="description"></textarea>
           </div>
+		  <div class="mb-3">
+		    <label for="newComment" class="form-label">コメントを追加</label>
+		    <textarea class="form-control" id="newComment" rows="2" placeholder="コメントを入力してください"></textarea>
+		    <button class="btn btn-sm btn-primary mt-2" id="addCommentBtn">投稿</button>
+		  </div>
+
         </form>
       </div>
       <div class="modal-footer">
@@ -104,6 +110,44 @@
     </div>
   </div>
 </div>
+
+<!-- 閲覧用：イベント詳細モーダル -->
+<div class="modal fade" id="viewEventModal" tabindex="-1" aria-labelledby="viewEventModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewEventModalLabel">仕事の詳細</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+      </div>
+      <div class="modal-body">
+		<p><strong>記入スタッフ:</strong> <span id="viewEventUser"></span></p>
+        <p><strong>仕事内容:</strong> <span id="viewEventTitle"></span></p>
+        <p><strong>開始時間:</strong> <span id="viewEventStart"></span></p>
+        <p><strong>終了時間:</strong> <span id="viewEventEnd"></span></p>
+        <p><strong>コメント:</strong></p>
+        <div id="viewEventDescription" class="border rounded bg-light p-2"></div>
+
+        <hr>
+        <h6>コメント一覧</h6>
+        <ul id="commentList" class="list-group mb-3">
+          <!-- JavaScriptでコメントを挿入 -->
+        </ul>
+
+        <!-- コメント投稿フォーム -->
+        <div>
+          <label for="newCommentView" class="form-label">コメントを追加</label>
+          <textarea class="form-control" id="newCommentView" rows="2"></textarea>
+          <button class="btn btn-primary mt-2" id="submitCommentBtn">投稿</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+		<button type="button" class="btn btn-primary" id="editEventBtn" style="display: none;">編集</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
         // FullCalendar イベントレンダリング時にこれを使って編集・削除ボタンの表示を制御
 </script>

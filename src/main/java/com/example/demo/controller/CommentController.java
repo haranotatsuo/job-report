@@ -31,6 +31,11 @@ public class CommentController {
     public List<CommentDto> getComments(@PathVariable Long eventId) {
         return commentService.getCommentsByEventId(eventId);
     }
+    
+    @GetMapping("/events/{eventId}/comments")
+    public List<CommentDto> getCommentsAlt(@PathVariable Long eventId) {
+        return commentService.getCommentsByEventId(eventId);
+    }
 
     // コメント追加（ログインユーザー情報付き）
     @PostMapping

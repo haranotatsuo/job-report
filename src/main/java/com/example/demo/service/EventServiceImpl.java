@@ -30,6 +30,9 @@ public class EventServiceImpl implements EventService {
         dto.setEnd(entity.getEnd());
         dto.setDescription(entity.getDescription());
         dto.setTargetUserId(entity.getTargetUserId());
+        userRepository.findById(entity.getUserId()).ifPresent(user -> {
+            dto.setUsername(user.getUsername()); // ← 担当者の名前（usernameなど）
+        });
         return dto;
     }
 
