@@ -91,14 +91,14 @@
             <input type="datetime-local" class="form-control" id="end">
           </div>
           <div class="mb-3">
-            <label for="description" class="form-label">コメント</label>
+            <label for="description" class="form-label">備考</label>
             <textarea class="form-control" id="description"></textarea>
           </div>
-		  <div class="mb-3">
-		    <label for="newComment" class="form-label">コメントを追加</label>
-		    <textarea class="form-control" id="newComment" rows="2" placeholder="コメントを入力してください"></textarea>
-		    <button class="btn btn-sm btn-primary mt-2" id="addCommentBtn">投稿</button>
-		  </div>
+<!--		  <div class="mb-3">-->
+<!--		    <label for="newComment" class="form-label">コメントを追加</label>-->
+<!--		    <textarea class="form-control" id="newComment" rows="2" placeholder="コメントを入力してください"></textarea>-->
+<!--		    <button class="btn btn-sm btn-primary mt-2" id="addCommentBtn">投稿</button>-->
+<!--		  </div>-->
 
         </form>
       </div>
@@ -124,7 +124,7 @@
         <p><strong>仕事内容:</strong> <span id="viewEventTitle"></span></p>
         <p><strong>開始時間:</strong> <span id="viewEventStart"></span></p>
         <p><strong>終了時間:</strong> <span id="viewEventEnd"></span></p>
-        <p><strong>コメント:</strong></p>
+        <p><strong>備考:</strong></p>
         <div id="viewEventDescription" class="border rounded bg-light p-2"></div>
 
         <hr>
@@ -134,11 +134,11 @@
         </ul>
 
         <!-- コメント投稿フォーム -->
-        <div>
-          <label for="newCommentView" class="form-label">コメントを追加</label>
-          <textarea class="form-control" id="newCommentView" rows="2"></textarea>
-          <button class="btn btn-primary mt-2" id="submitCommentBtn">投稿</button>
-        </div>
+		<div class="mb-3">
+		  <label for="newComment" class="form-label">コメントを追加</label>
+		  <textarea class="form-control" id="newComment" rows="2" placeholder="コメントを入力してください"></textarea>
+		  <button class="btn btn-sm btn-primary mt-2" id="addCommentBtn">投稿</button>
+		</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>

@@ -79,13 +79,13 @@ document.addEventListener('DOMContentLoaded', function () {
 	  	  return;
 	  	}
 
-	  	fetch(`/api/comments/event/${eventId}`, {
+	  	fetch('/api/comments', {
 	  	  method: 'POST',
 	  	  headers: {
 	  	    'Content-Type': 'application/json',
 	  	    'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
 	  	  },
-	  	  body: JSON.stringify({ content })
+	  	  body: JSON.stringify({ content, eventId })
 	  	})
 	  	.then(response => {
 	  	  if (!response.ok) throw new Error('投稿に失敗しました');
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 🔽 外に出した loadComments 関数（currentUserIdを引数に）
 function loadComments(eventId, currentUserId) {
-  fetch(`/api/events/${eventId}/comments`)
+  fetch(`/api/comments/events/${eventId}/comments`)
     .then(response => response.json())
     .then(comments => {
       const commentList = document.getElementById('commentList');
